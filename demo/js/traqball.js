@@ -111,7 +111,8 @@
             mouseDownVect 	= [],	// Vector on mousedown
             mouseMoveVect 	= [],	// Vector during mousemove
             startMatrix 	= [],	// Transformation-matrix at the moment of *starting* dragging
-            impulse, pos, angle, w, h, delta = 0, decr, oldAngle, oldTime, curTime;
+            delta 			= 0,
+            impulse, pos, w, h, decr, angle, oldAngle, oldTime, curTime;
                 
         (function init (){
             THIS.disable();
@@ -147,9 +148,9 @@
                 pOrigin		= getStyle(stage, prefix+"perspective-origin"),
                 bTransform	= getStyle(THIS.box, prefix+"transform");
                             
-            //Let's set the start values. If "conf" contains angle or perspective or vector, use them.
-            //If not, look for css3d transforms in the CSS.
-            //If this fails, let's create some default values.
+            //Let's define the start values. If "conf" contains angle or perspective or vector, use them.
+            //If not, look for css3d transforms within the CSS.
+            //If this fails, let's use some default values.
             
             if(THIS.config.axis || THIS.config.angle){
                 // Normalize the initAxis (initAxis = axis of rotation) because "box" will look distorted if normal is too long
@@ -253,7 +254,6 @@
             // We already calculated the z-vector-component on mousedown and the z-vector-component during mouse-movement. 
             // We will use them to retrieve the current rotation-axis 
             // (the normal-vector perpendiular to mouseDownVect and mouseMoveVect).
-            // Mathematical explanation here: http://www.netcomuk.co.uk/~jenolive/vect13.html
             axis[0] = mouseDownVect[1]*mouseMoveVect[2]-mouseDownVect[2]*mouseMoveVect[1];
             axis[1] = mouseDownVect[2]*mouseMoveVect[0]-mouseDownVect[0]*mouseMoveVect[2];
             axis[2] = mouseDownVect[0]*mouseMoveVect[1]-mouseDownVect[1]*mouseMoveVect[0];
@@ -265,8 +265,7 @@
             
             //Only one thing left to do: Update the position of the box by applying a new transform:
             // 2 transforms will be applied: the current rotation 3d and the start-matrix
-            THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad) "+
-                                                    "matrix3d("+startMatrix+") ";
+            THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad) matrix3d("+startMatrix+")";
                                         
             curTime = new Date().getTime();
         }
@@ -285,12 +284,11 @@
         } 
         
         function slide(){
-             angle+= delta*spin;
+            angle+= delta*spin;
             decr = 0.01*Math.sqrt(delta);
             delta = delta > 0 ? delta-decr : 0;
-            //delta-=decr;
-            THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad)"+
-                                                  "matrix3d("+startMatrix+") ";
+            
+            THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad) matrix3d("+startMatrix+")";
             
             if (delta === 0){
                 stopSlide();
@@ -306,8 +304,7 @@
             delta = 0;
         }
         
-        //Some stupid matrix-multiplication. See http://en.wikipedia.org/wiki/Matrix_multiplication 
-        //for an explanation of the math.
+        //Some stupid matrix-multiplication. 
         function multiplyMatrix(m1, m2){
             var matrix = [];
         
@@ -358,7 +355,6 @@
         }
             
         // Calculate the angle between 2 vectors.
-        // see http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm for more info
         function calcAngle(vect_1, vect_2){
             var numerator 	= 	vect_1[0]*vect_2[0] + vect_1[1]*vect_2[1] + vect_1[2]*vect_2[2],
                 denominator	= 	Math.sqrt(vect_1[0]*vect_1[0] + vect_1[1]*vect_1[1] + vect_1[2]*vect_1[2])*
