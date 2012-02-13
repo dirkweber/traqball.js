@@ -21,10 +21,11 @@
         spin	= 1;
     }else if(/explorer/gi.test(userAgent)){
         prefix = "-ms-";
-        cssPref = "MS";
+        cssPref = "ms";
     }else if(/mozilla/gi.test(userAgent)){
         prefix = "-moz-";
         cssPref = "Moz";
+        spin = 1;
     }else if(/opera/gi.test(userAgent)){
         prefix = "-o-";
         cssPref = "O";
