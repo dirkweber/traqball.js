@@ -12,16 +12,14 @@
     var userAgent	= navigator.userAgent.toLowerCase(),
         canTouch 	= "ontouchstart" in window,
         prefix 		= cssPref = "",
-        spin		= -1,   //fixing reverse direction bug with rotate3d in webkit
         requestAnimFrame, cancelAnimFrame;
     
     if(/webkit/gi.test(userAgent)){
         prefix = "-webkit-";
         cssPref = "Webkit";
-        spin	= 1;
-    }else if(/explorer/gi.test(userAgent)){
+    }else if(/msie/gi.test(userAgent)){
         prefix = "-ms-";
-        cssPref = "MS";
+        cssPref = "ms";
     }else if(/mozilla/gi.test(userAgent)){
         prefix = "-moz-";
         cssPref = "Moz";
@@ -155,7 +153,7 @@
             if(THIS.config.axis || THIS.config.angle){
                 // Normalize the initAxis (initAxis = axis of rotation) because "box" will look distorted if normal is too long
                 axis = normalize(THIS.config.axis) || [1,0,0];
-                angle = THIS.config.angle*spin || 0;
+                angle = THIS.config.angle || 0;
                 // Last but not least we calculate a matrix from the axis and the angle.
                 // This matrix will store the initial orientation in 3d-space
                 startMatrix = calcMatrix(axis, angle);
@@ -284,7 +282,7 @@
         } 
         
         function slide(){
-            angle+= delta*spin;
+            angle+= delta;
             decr = 0.01*Math.sqrt(delta);
             delta = delta > 0 ? delta-decr : 0;
             
@@ -359,7 +357,7 @@
             var numerator 	= 	vect_1[0]*vect_2[0] + vect_1[1]*vect_2[1] + vect_1[2]*vect_2[2],
                 denominator	= 	Math.sqrt(vect_1[0]*vect_1[0] + vect_1[1]*vect_1[1] + vect_1[2]*vect_1[2])*
                                 Math.sqrt(vect_2[0]*vect_2[0] + vect_2[1]*vect_2[1] + vect_2[2]*vect_2[2]),
-                angle		=	Math.acos(numerator/denominator)*spin;
+                angle		=	Math.acos(numerator/denominator);
             
             return angle;
         }
@@ -372,9 +370,9 @@
                 sin		= Math.sin(angle),
                 cos		= Math.cos(angle),
                 cosmin	= 1-cos,
-                matrix	= [(cos+x*x*cosmin), (y*x*cosmin+spin*z*sin),(z*x*cosmin-spin*y*sin),0,
-                          (x*y*cosmin-spin*z*sin), (cos+y*y*cosmin), (z*y*cosmin+spin*x*sin),0,
-                          (x*z*cosmin+spin*y*sin), (y*z*cosmin-spin*x*sin), (cos+z*z*cosmin),0,
+                matrix	= [(cos+x*x*cosmin), (y*x*cosmin+z*sin),(z*x*cosmin-y*sin),0,
+                          (x*y*cosmin-z*sin), (cos+y*y*cosmin), (z*y*cosmin+x*sin),0,
+                          (x*z*cosmin+y*sin), (y*z*cosmin-x*sin), (cos+z*z*cosmin),0,
                           0,0,0,1];
                                           
             return matrix;
