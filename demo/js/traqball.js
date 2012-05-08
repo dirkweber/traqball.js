@@ -10,6 +10,10 @@
 
 (function(){
     var userAgent	= navigator.userAgent.toLowerCase(),
+        startEvent = document.createEvent('HTMLEvents'),
+        rotateEvent = document.createEvent('HTMLEvents'),
+        releaseEvent = document.createEvent('HTMLEvents'),
+        fullStopEvent = document.createEvent('HTMLEvents'),
         canTouch 	= "ontouchstart" in window,
         prefix 		= cssPref = "",
         requestAnimFrame, cancelAnimFrame;
@@ -29,7 +33,12 @@
     }else{
         prefix = "";
     }
-    
+
+    startEvent.initEvent("traqballStartRotate", true, true);
+    rotateEvent.initEvent("traqballRotate", true, true);
+    releaseEvent.initEvent("traqballRelease", true, true);
+    fullStopEvent.initEvent("traqballFullStop", true, true);
+
     function bindEvent(target, type, callback, remove){
         //translate events
         var evType 		= type || "touchend",
@@ -207,7 +216,9 @@
             mouseDownVect 	= calcZvector(getCoords(e));
             oldTime			= curTime = new Date().getTime();
             oldAngle 		= angle; 
-        
+
+            THIS.box.dispatchEvent(startEvent);
+
             bindEvent(THIS.box,'touchstart', startrotation, "remove");
             bindEvent(document, 'touchmove', rotate);
             bindEvent(document, 'touchend', finishrotation);			
@@ -220,6 +231,9 @@
             bindEvent(document, 'touchend', finishrotation, "remove");
             bindEvent(THIS.box, 'touchstart', startrotation);
             calcSpeed();
+
+            THIS.box.dispatchEvent(releaseEvent);
+
             if( impulse && delta > 0){
                 requestAnimFrame(slide);
             }else if(!(isNaN(axis[0]) || isNaN(axis[1]) || isNaN(axis[2]))) {
@@ -264,7 +278,9 @@
             //Only one thing left to do: Update the position of the box by applying a new transform:
             // 2 transforms will be applied: the current rotation 3d and the start-matrix
             THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad) matrix3d("+startMatrix+")";
-                                        
+            rotateEvent.data = {axis: axis, angle: angle};
+            THIS.box.dispatchEvent(rotateEvent);
+            
             curTime = new Date().getTime();
         }
     
@@ -287,6 +303,8 @@
             delta = delta > 0 ? delta-decr : 0;
             
             THIS.box.style[cssPref+"Transform"] = "rotate3d("+ axis+","+angle+"rad) matrix3d("+startMatrix+")";
+            rotateEvent.data = {axis: axis, angle: angle};
+            THIS.box.dispatchEvent(rotateEvent);
             
             if (delta === 0){
                 stopSlide();
@@ -298,8 +316,12 @@
         function stopSlide(){
             cancelAnimFrame(slide);
             cleanupMatrix();
+
             oldAngle = angle = 0;
             delta = 0;
+
+            fullStopEvent.data = {matrix: startMatrix};
+            THIS.box.dispatchEvent(fullStopEvent);
         }
         
         //Some stupid matrix-multiplication. 
