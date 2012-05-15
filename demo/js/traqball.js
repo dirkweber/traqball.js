@@ -98,7 +98,7 @@
     
     Traqball.prototype.disable = function(){
         if(this.box !== null){
-            bindEvent(this.box, 'touchstart', this.evHandlers[0], "remove");
+            bindEvent(this.config.activationArea, 'touchstart', this.evHandlers[0], "remove");
             bindEvent(document, 'touchmove', this.evHandlers[1], "remove");
             bindEvent(document, 'touchend', this.evHandlers[2], "remove");
         }
@@ -106,7 +106,7 @@
     
     Traqball.prototype.activate = function(){
         if(this.box !== null){
-            bindEvent(this.box, 'touchstart', this.evHandlers[0]);
+            bindEvent(this.config.activationArea, 'touchstart', this.evHandlers[0]);
             bindEvent(document, 'touchmove', this.evHandlers[1], "remove");
             bindEvent(document, 'touchend', this.evHandlers[2], "remove");
         }
@@ -154,6 +154,9 @@
                     THIS.box = child;
                     break;
                 }
+            }
+            if (typeof THIS.config.activationArea === 'undefined') {
+                THIS.config.activationArea = THIS.box;
             }
             
             var perspective	= getStyle(stage, prefix+"perspective"),
@@ -224,7 +227,7 @@
 
             THIS.box.dispatchEvent(startEvent);
 
-            bindEvent(THIS.box,'touchstart', startrotation, "remove");
+            bindEvent(THIS.config.activationArea,'touchstart', startrotation, "remove");
             bindEvent(document, 'touchmove', rotate);
             bindEvent(document, 'touchend', finishrotation);			
         }
@@ -234,7 +237,7 @@
         
             bindEvent(document, 'touchmove', rotate, "remove");
             bindEvent(document, 'touchend', finishrotation, "remove");
-            bindEvent(THIS.box, 'touchstart', startrotation);
+            bindEvent(THIS.config.activationArea, 'touchstart', startrotation);
             calcSpeed();
 
             THIS.box.dispatchEvent(releaseEvent);
