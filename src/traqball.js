@@ -211,7 +211,7 @@
             }
             
             THIS.box.style[cssPref+"Transform"] = "matrix3d("+ startMatrix+")";
-            bindEvent(THIS.box, 'touchstart', startrotation);
+            bindEvent(THIS.config.activationArea, 'touchstart', startrotation);
             
             THIS.evHandlers = [startrotation, rotate, finishrotation];
         })();
