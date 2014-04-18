@@ -17,7 +17,7 @@
     if(/webkit/gi.test(userAgent)){
         prefix = "-webkit-";
         cssPref = "Webkit";
-    }else if(/msie/gi.test(userAgent)){
+    }else if(/msie | trident/gi.test(userAgent)){
         prefix = "-ms-";
         cssPref = "ms";
     }else if(/mozilla/gi.test(userAgent)){
