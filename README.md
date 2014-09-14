@@ -31,6 +31,7 @@ var mytraqball = new Traqball(configurationObject);
 	perspective: 		perspectiveValue,	// Perspective. Integer, default value 700.
 	perspectiveOrigin:	"xVal yVal",		// Perspective Origin. String, default value "50% 50%".
 	impulse: 			boolean, 			// Defines if object receives an impulse after relesing mouse/touchend. Default value: true.
+	limitAxxis:			"x" | "y"			//limits the rotation to only one axxis.
 	}
 ```
 If a parameter is missing from configurationObject, existing CSS rules will be applied. If no CSS rules exist, default values will kick in.
