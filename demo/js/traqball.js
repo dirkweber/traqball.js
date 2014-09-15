@@ -1,17 +1,17 @@
 /*
- * 	traqball 2.1
- *	written by Dirk Weber	
- *	http://www.eleqtriq.com/
- *	See demo at: http://www.eleqtriq.com/wp-content/static/demos/2011/traqball2011
+ *  traqball 2.2
+ *  written by Dirk Weber   
+ *  http://www.eleqtriq.com/
+ *  See demo at: http://www.eleqtriq.com/wp-content/static/demos/2011/traqball2011
  
- *	Copyright (c) 2011 Dirk Weber (http://www.eleqtriq.com)
- *	Licensed under the MIT (http://www.eleqtriq.com/wp-content/uploads/2010/11/mit-license.txt)
+ *  Copyright (c) 2011 Dirk Weber (http://www.eleqtriq.com)
+ *  Licensed under the MIT (http://www.eleqtriq.com/wp-content/uploads/2010/11/mit-license.txt)
  */
 
 (function(){
-    var userAgent	= navigator.userAgent.toLowerCase(),
-        canTouch 	= "ontouchstart" in window,
-        prefix 		= cssPref = "",
+    var userAgent   = navigator.userAgent.toLowerCase(),
+        canTouch    = "ontouchstart" in window,
+        prefix      = cssPref = "",
         requestAnimFrame, cancelAnimFrame;
     
     if(/webkit/gi.test(userAgent)){
@@ -32,10 +32,10 @@
     
     function bindEvent(target, type, callback, remove){
         //translate events
-        var evType 		= type || "touchend",
-            mouseEvs 	= ["mousedown", "mouseup", "mousemove"],
-            touchEvs 	= ["touchstart", "touchend", "touchmove"],
-            remove		= remove || "add";
+        var evType      = type || "touchend",
+            mouseEvs    = ["mousedown", "mouseup", "mousemove"],
+            touchEvs    = ["touchstart", "touchend", "touchmove"],
+            remove      = remove || "add";
          
         evType = canTouch ? evType : mouseEvs[touchEvs.indexOf(type)];
         
@@ -52,9 +52,9 @@
         }else if(eventObj.type.indexOf("touch") > -1){
             //only do stuff if 1 single finger is used:
             if(eventObj.touches.length === 1){
-                var touch	= eventObj.touches[0];
-                xTouch		= touch.pageX;
-                yTouch		= touch.pageY;
+                var touch   = eventObj.touches[0];
+                xTouch      = touch.pageX;
+                yTouch      = touch.pageY;
             }
         }
         
@@ -102,14 +102,14 @@
     }
         
     Traqball.prototype.setup = function(conf){
-        var THIS			= this,
-            radius,					// prepare a variable for storing the radius of our virtual trackball
-            stage, 					// the DOM-container of our "rotatable" element
-            axis 			= [],	// The rotation-axis
-            mouseDownVect 	= [],	// Vector on mousedown
-            mouseMoveVect 	= [],	// Vector during mousemove
-            startMatrix 	= [],	// Transformation-matrix at the moment of *starting* dragging
-            delta 			= 0,
+        var THIS            = this,
+            radius,                 // prepare a variable for storing the radius of our virtual trackball
+            stage,                  // the DOM-container of our "rotatable" element
+            axis            = [],   // The rotation-axis
+            mouseDownVect   = [],   // Vector on mousedown
+            mouseMoveVect   = [],   // Vector during mousemove
+            startMatrix     = [],   // Transformation-matrix at the moment of *starting* dragging
+            delta           = 0,
             impulse, pos, w, h, decr, angle, oldAngle, oldTime, curTime;
                 
         (function init (){
@@ -119,15 +119,15 @@
                 THIS.config[prop] = conf[prop];
                 }
                 
-            stage	= document.getElementById(THIS.config.stage) || document.getElementsByTagname("body")[0];
-            pos 	= findPos(stage);
-            angle 	= THIS.config.angle || 0;
-            impulse	= THIS.config.impulse === false ? false : true;
+            stage   = document.getElementById(THIS.config.stage) || document.getElementsByTagname("body")[0];
+            pos     = findPos(stage);
+            angle   = THIS.config.angle || 0;
+            impulse = THIS.config.impulse === false ? false : true;
              
             // Let's calculate some basic values from "stage" that are necessary for our virtual trackball
             // 1st: determine the radius of our virtual trackball:
-            h	= stage.offsetHeight/2,
-            w	= stage.offsetWidth/2;
+            h   = stage.offsetHeight/2,
+            w   = stage.offsetWidth/2;
         
             //take the shortest of both values as radius
             radius = h<w ? h : w;
@@ -142,9 +142,9 @@
                 }
             }
             
-            var perspective	= getStyle(stage, prefix+"perspective"),
-                pOrigin		= getStyle(stage, prefix+"perspective-origin"),
-                bTransform	= getStyle(THIS.box, prefix+"transform");
+            var perspective = getStyle(stage, prefix+"perspective"),
+                pOrigin     = getStyle(stage, prefix+"perspective-origin"),
+                bTransform  = getStyle(THIS.box, prefix+"transform");
                             
             //Let's define the start values. If "conf" contains angle or perspective or vector, use them.
             //If not, look for css3d transforms within the CSS.
@@ -158,7 +158,7 @@
                 // This matrix will store the initial orientation in 3d-space
                 startMatrix = calcMatrix(axis, angle);
             }else if(bTransform !== "none"){
-                //already css3d transforms on element?				
+                //already css3d transforms on element?              
                 startMatrix = bTransform.split(",");
                 
                 //Under certain circumstances some browsers report 2d Transforms.
@@ -200,17 +200,17 @@
         })();
             
         
-        function startrotation(e){	
+        function startrotation(e){  
             if(delta !== 0){stopSlide();};
             e.preventDefault();
             
-            mouseDownVect 	= calcZvector(getCoords(e));
-            oldTime			= curTime = new Date().getTime();
-            oldAngle 		= angle; 
+            mouseDownVect   = calcZvector(getCoords(e));
+            oldTime         = curTime = new Date().getTime();
+            oldAngle        = angle; 
         
             bindEvent(THIS.box,'touchstart', startrotation, "remove");
             bindEvent(document, 'touchmove', rotate);
-            bindEvent(document, 'touchend', finishrotation);			
+            bindEvent(document, 'touchend', finishrotation);            
         }
     
         function finishrotation(e){
@@ -234,13 +234,13 @@
             // 1. calculate a matrix from axis and the current angle
             // 2. Create a new startmatrix by combining current startmatrix and stopmatrix to a new matrix. 
             // Matrices can be combined by multiplication, so what are we waiting for?
-            stopMatrix	= calcMatrix(axis, angle);
-            startMatrix	= multiplyMatrix(startMatrix,stopMatrix);
+            stopMatrix  = calcMatrix(axis, angle);
+            startMatrix = multiplyMatrix(startMatrix,stopMatrix);
         }
     
         // The rotation:
         function rotate(e){
-            var eCoords	= getCoords(e);
+            var eCoords = getCoords(e);
             e.preventDefault();
             
             oldTime = curTime;
@@ -255,7 +255,7 @@
             axis[0] = mouseDownVect[1]*mouseMoveVect[2]-mouseDownVect[2]*mouseMoveVect[1];
             axis[1] = mouseDownVect[2]*mouseMoveVect[0]-mouseDownVect[0]*mouseMoveVect[2];
             axis[2] = mouseDownVect[0]*mouseMoveVect[1]-mouseDownVect[1]*mouseMoveVect[0];
-            axis	= normalize(axis);
+            axis    = normalize(axis);
              
             // Now that we have the normal, we need the angle of the rotation.
             // Easy to find by calculating the angle between mouseDownVect and mouseMoveVect:
@@ -269,10 +269,10 @@
         }
     
         function calcSpeed(){
-            var dw 	= angle - oldAngle;
-                dt 	= curTime-oldTime;
+            var dw  = angle - oldAngle;
+                dt  = curTime-oldTime;
                 
-            delta 	= Math.abs(dw*17/dt);
+            delta   = Math.abs(dw*17/dt);
             
             if(isNaN(delta)){
                 delta = 0;
@@ -306,22 +306,22 @@
         function multiplyMatrix(m1, m2){
             var matrix = [];
         
-            matrix[0]	= m1[0]*m2[0]+m1[1]*m2[4]+m1[2]*m2[8]+m1[3]*m2[12];
-            matrix[1]	= m1[0]*m2[1]+m1[1]*m2[5]+m1[2]*m2[9]+m1[3]*m2[13];
-            matrix[2]	= m1[0]*m2[2]+m1[1]*m2[6]+m1[2]*m2[10]+m1[3]*m2[14];
-            matrix[3]	= m1[0]*m2[3]+m1[1]*m2[7]+m1[2]*m2[11]+m1[3]*m2[15];
-            matrix[4]	= m1[4]*m2[0]+m1[5]*m2[4]+m1[6]*m2[8]+m1[7]*m2[12];
-            matrix[5]	= m1[4]*m2[1]+m1[5]*m2[5]+m1[6]*m2[9]+m1[7]*m2[13];
-            matrix[6]	= m1[4]*m2[2]+m1[5]*m2[6]+m1[6]*m2[10]+m1[7]*m2[14];
-            matrix[7]	= m1[4]*m2[3]+m1[5]*m2[7]+m1[6]*m2[11]+m1[7]*m2[15];
-            matrix[8]	= m1[8]*m2[0]+m1[9]*m2[4]+m1[10]*m2[8]+m1[11]*m2[12];
-            matrix[9]	= m1[8]*m2[1]+m1[9]*m2[5]+m1[10]*m2[9]+m1[11]*m2[13];
-            matrix[10]	= m1[8]*m2[2]+m1[9]*m2[6]+m1[10]*m2[10]+m1[11]*m2[14];
-            matrix[11]	= m1[8]*m2[3]+m1[9]*m2[7]+m1[10]*m2[11]+m1[11]*m2[15];
-            matrix[12]	= m1[12]*m2[0]+m1[13]*m2[4]+m1[14]*m2[8]+m1[15]*m2[12];
-            matrix[13]	= m1[12]*m2[1]+m1[13]*m2[5]+m1[14]*m2[9]+m1[15]*m2[13];
-            matrix[14]	= m1[12]*m2[2]+m1[13]*m2[6]+m1[14]*m2[10]+m1[15]*m2[14];
-            matrix[15]	= m1[12]*m2[3]+m1[13]*m2[7]+m1[14]*m2[11]+m1[15]*m2[15];
+            matrix[0]   = m1[0]*m2[0]+m1[1]*m2[4]+m1[2]*m2[8]+m1[3]*m2[12];
+            matrix[1]   = m1[0]*m2[1]+m1[1]*m2[5]+m1[2]*m2[9]+m1[3]*m2[13];
+            matrix[2]   = m1[0]*m2[2]+m1[1]*m2[6]+m1[2]*m2[10]+m1[3]*m2[14];
+            matrix[3]   = m1[0]*m2[3]+m1[1]*m2[7]+m1[2]*m2[11]+m1[3]*m2[15];
+            matrix[4]   = m1[4]*m2[0]+m1[5]*m2[4]+m1[6]*m2[8]+m1[7]*m2[12];
+            matrix[5]   = m1[4]*m2[1]+m1[5]*m2[5]+m1[6]*m2[9]+m1[7]*m2[13];
+            matrix[6]   = m1[4]*m2[2]+m1[5]*m2[6]+m1[6]*m2[10]+m1[7]*m2[14];
+            matrix[7]   = m1[4]*m2[3]+m1[5]*m2[7]+m1[6]*m2[11]+m1[7]*m2[15];
+            matrix[8]   = m1[8]*m2[0]+m1[9]*m2[4]+m1[10]*m2[8]+m1[11]*m2[12];
+            matrix[9]   = m1[8]*m2[1]+m1[9]*m2[5]+m1[10]*m2[9]+m1[11]*m2[13];
+            matrix[10]  = m1[8]*m2[2]+m1[9]*m2[6]+m1[10]*m2[10]+m1[11]*m2[14];
+            matrix[11]  = m1[8]*m2[3]+m1[9]*m2[7]+m1[10]*m2[11]+m1[11]*m2[15];
+            matrix[12]  = m1[12]*m2[0]+m1[13]*m2[4]+m1[14]*m2[8]+m1[15]*m2[12];
+            matrix[13]  = m1[12]*m2[1]+m1[13]*m2[5]+m1[14]*m2[9]+m1[15]*m2[13];
+            matrix[14]  = m1[12]*m2[2]+m1[13]*m2[6]+m1[14]*m2[10]+m1[15]*m2[14];
+            matrix[15]  = m1[12]*m2[3]+m1[13]*m2[7]+m1[14]*m2[11]+m1[15]*m2[15];
         
             return matrix;
         }
@@ -329,20 +329,20 @@
         // This function will calculate a z-component for our 3D-vector from the mouse x and y-coordinates 
         // (the corresponding point on our virtual trackball):
         function calcZvector(coords){
-            var x       = THIS.config.limitAxxis === "x" ? pos[0] - radius/2 : coords[0] - pos[0],
-                y       = THIS.config.limitAxxis === "y" ? pos[1] : coords[1] - pos[1],
+            var x       = THIS.config.limitAxxis === "x" ? radius : coords[0] - pos[0],
+                y       = THIS.config.limitAxxis === "y" ? radius : coords[1] - pos[1],
                 vector  = [(x/radius-1), (y/radius-1)],
                 z       = 1 - vector[0]*vector[0] - vector[1]*vector[1];
                 
              // Make sure that dragging stops when z gets a negative value:
             vector[2]   = z > 0 ? Math.sqrt(z) : 0;
-
+ 
             return vector;
         }
     
         // Normalization recalculates all coordinates in a way that the resulting vector has a length of "1". 
         // We achieve this by dividing the x, y and z-coordinates by the vector's length 
-        function normalize(vect){	
+        function normalize(vect){   
             var length = Math.sqrt( vect[0]*vect[0] + vect[1]*vect[1] + vect[2]*vect[2] );
             
             vect[0]/= length;
@@ -354,23 +354,23 @@
             
         // Calculate the angle between 2 vectors.
         function calcAngle(vect_1, vect_2){
-            var numerator 	= 	vect_1[0]*vect_2[0] + vect_1[1]*vect_2[1] + vect_1[2]*vect_2[2],
-                denominator	= 	Math.sqrt(vect_1[0]*vect_1[0] + vect_1[1]*vect_1[1] + vect_1[2]*vect_1[2])*
+            var numerator   =   vect_1[0]*vect_2[0] + vect_1[1]*vect_2[1] + vect_1[2]*vect_2[2],
+                denominator =   Math.sqrt(vect_1[0]*vect_1[0] + vect_1[1]*vect_1[1] + vect_1[2]*vect_1[2])*
                                 Math.sqrt(vect_2[0]*vect_2[0] + vect_2[1]*vect_2[1] + vect_2[2]*vect_2[2]),
-                angle		=	Math.acos(numerator/denominator);
+                angle       =   Math.acos(numerator/denominator);
             
             return angle;
         }
     
         function calcMatrix(vector, angle){
             // calculate transformation-matrix from a vector[x,y,z] and an angle
-            var x		= vector[0],
-                y		= vector[1],
-                z		= vector[2],
-                sin		= Math.sin(angle),
-                cos		= Math.cos(angle),
-                cosmin	= 1-cos,
-                matrix	= [(cos+x*x*cosmin), (y*x*cosmin+z*sin),(z*x*cosmin-y*sin),0,
+            var x       = vector[0],
+                y       = vector[1],
+                z       = vector[2],
+                sin     = Math.sin(angle),
+                cos     = Math.cos(angle),
+                cosmin  = 1-cos,
+                matrix  = [(cos+x*x*cosmin), (y*x*cosmin+z*sin),(z*x*cosmin-y*sin),0,
                           (x*y*cosmin-z*sin), (cos+y*y*cosmin), (z*y*cosmin+x*sin),0,
                           (x*z*cosmin+y*sin), (y*z*cosmin-x*sin), (cos+z*z*cosmin),0,
                           0,0,0,1];
@@ -381,7 +381,7 @@
         //findPos-script by www.quirksmode.org
         function findPos(obj) {
             var curleft = 0,
-                curtop 	= 0;
+                curtop  = 0;
         
             if (obj.offsetParent) {
                 do {

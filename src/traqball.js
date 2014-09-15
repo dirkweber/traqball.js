@@ -1,5 +1,5 @@
 /*
- *  traqball 2.1
+ *  traqball 2.2
  *  written by Dirk Weber   
  *  http://www.eleqtriq.com/
  *  See demo at: http://www.eleqtriq.com/wp-content/static/demos/2011/traqball2011
@@ -329,14 +329,14 @@
         // This function will calculate a z-component for our 3D-vector from the mouse x and y-coordinates 
         // (the corresponding point on our virtual trackball):
         function calcZvector(coords){
-            var x       = THIS.config.limitAxxis === "x" ? pos[0] - radius/2 : coords[0] - pos[0],
-                y       = THIS.config.limitAxxis === "y" ? pos[1] : coords[1] - pos[1],
+            var x       = THIS.config.limitAxxis === "x" ? radius : coords[0] - pos[0],
+                y       = THIS.config.limitAxxis === "y" ? radius : coords[1] - pos[1],
                 vector  = [(x/radius-1), (y/radius-1)],
                 z       = 1 - vector[0]*vector[0] - vector[1]*vector[1];
                 
              // Make sure that dragging stops when z gets a negative value:
             vector[2]   = z > 0 ? Math.sqrt(z) : 0;
-
+ 
             return vector;
         }
     
