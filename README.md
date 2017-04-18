@@ -7,7 +7,7 @@ traqball.js will only work in browsers that support the CSS 3D Transforms Module
 
 ## How to include traqball.js:
 
-####1. Include a reference to traqball.js into the head:
+#### 1. Include a reference to traqball.js into the head:
 
 ``` js
 <script type="text/javascript" src="traqball.js"></script>
@@ -15,7 +15,7 @@ traqball.js will only work in browsers that support the CSS 3D Transforms Module
 
 traqball will NOT check if the browser supports CSS 3D transfoms. If you need feature checking, take care of that yourself or use some library like modernizr.
 
-####2. On window load create one or more traqballs:
+#### 2. On window load create one or more traqballs:
 
 ``` js
 var mytraqball = new Traqball(configurationObject);
