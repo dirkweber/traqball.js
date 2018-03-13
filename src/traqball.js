@@ -119,7 +119,7 @@
                 THIS.config[prop] = conf[prop];
                 }
                 
-            stage   = document.getElementById(THIS.config.stage) || document.getElementsByTagname("body")[0];
+            stage   = document.getElementById(THIS.config.stage) || document.getElementsByTagName("body")[0];
             pos     = findPos(stage);
             angle   = THIS.config.angle || 0;
             impulse = THIS.config.impulse === false ? false : true;
